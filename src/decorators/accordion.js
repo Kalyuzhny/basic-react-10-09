@@ -8,6 +8,7 @@ export default (OriginalComponent) =>
     }
 
     toggleOpenItem = (openItemId) => this.setState({ openItemId })
+    toggleCloseItem = () => this.setState({ openItemId: null })
 
     render() {
       return (
@@ -15,6 +16,7 @@ export default (OriginalComponent) =>
           {...this.props}
           {...this.state}
           toggleOpenItem={this.toggleOpenItem}
+          toggleCloseItem={this.toggleCloseItem}
         />
       )
     }

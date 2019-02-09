@@ -8,7 +8,7 @@ class Article extends PureComponent {
       <div>
         <div>
           <h3 ref={this.setTitleRef}>{article.title}</h3>
-          <button onClick={this.handleBtnClick}>
+          <button onClick={this.handleBtnClick} value={isOpen}>
             {isOpen ? 'close' : 'open'}
           </button>
         </div>
@@ -19,7 +19,11 @@ class Article extends PureComponent {
 
   setTitleRef = (titleRef) => console.log(titleRef)
 
-  handleBtnClick = () => this.props.toggleOpen(this.props.article.id)
+  handleBtnClick = (event) => {
+    event && event.target.value === 'false'
+      ? this.props.toggleOpen(this.props.article.id)
+      : this.props.toggleClose()
+  }
 }
 
 export default Article
