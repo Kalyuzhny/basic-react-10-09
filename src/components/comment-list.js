@@ -7,8 +7,8 @@ import PropTypes from 'prop-types'
 
 export class CommentList extends Component {
   static propTypes = {
-    isOpen: PropTypes.bool,
-    toggleOpen: PropTypes.func.isRequired
+    isOpen: PropTypes.bool
+    //toggleOpen: PropTypes.func.isRequired
   }
 
   static defaultProps = {

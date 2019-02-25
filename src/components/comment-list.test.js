@@ -40,16 +40,30 @@ describe('ArticleList', () => {
     )
   })
 
-  it('should close comment list on click', () => {
+  it('should close comment list on click', (done) => {
     var comments = articles[0].comments
 
     const container = mount(<ToggleOpen comments={comments} isOpen={false} />)
 
-    console.info(container.debug())
+    container
+      .find('.test__commentlist--btn')
+      .at(0)
+      .simulate('click')
 
-    container.find('.test__commentlist--btn').at(0)
-    //.simulate('click');
+    container
+      .find('.test__commentlist--btn')
+      .at(0)
+      .simulate('click')
 
-    expect(container.find('.test__comment-list--item').length).toEqual(0)
+    setTimeout(() => {
+      try {
+        container.simulate('transitionEnd')
+        expect(container.find('.test__comment-list--item').length).toEqual(0)
+
+        done()
+      } catch (err) {
+        done.fail(err)
+      }
+    }, 800)
   })
 })
