@@ -5,20 +5,18 @@ import Comment from '../comment'
 import CommentForm from '../comment-form'
 import toggleOpen from '../../decorators/toggleOpen'
 import './style.css'
+import { loadComments } from '../../ac'
+import { connect } from 'react-redux'
+import { articleCommentsSelector } from '../../selectors/index'
 
 class CommentList extends Component {
   static propTypes = {
     article: PropTypes.object,
+
     //from toggleOpen decorator
     isOpen: PropTypes.bool,
     toggleOpen: PropTypes.func
   }
-
-  /*
-  static defaultProps = {
-    comments: []
-  }
-*/
 
   render() {
     const { isOpen, toggleOpen } = this.props
@@ -41,9 +39,11 @@ class CommentList extends Component {
 
   getBody() {
     const {
-      article: { comments = [], id },
-      isOpen
+      article: { id },
+      isOpen,
+      comments
     } = this.props
+    console.info('--- Comments from list: ' + comments)
     if (!isOpen) return null
 
     return (
@@ -58,10 +58,15 @@ class CommentList extends Component {
     )
   }
 
+  componentDidMount() {
+    const { fetchData } = this.props
+    fetchData && fetchData(this.props.article.id)
+  }
+
   get comments() {
     return (
       <ul>
-        {this.props.article.comments.map((id) => (
+        {this.props.comments.map((id) => (
           <li key={id} className="test__comment-list--item">
             <Comment id={id} />
           </li>
@@ -71,4 +76,12 @@ class CommentList extends Component {
   }
 }
 
-export default toggleOpen(CommentList)
+export default connect(
+  (state) => {
+    console.log('---', 'comment list connect' + articleCommentsSelector(state))
+    return {
+      comments: articleCommentsSelector(state)
+    }
+  },
+  { fetchData: loadComments }
+)(toggleOpen(CommentList))

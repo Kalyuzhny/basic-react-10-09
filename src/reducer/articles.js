@@ -42,6 +42,7 @@ export default (articlesState = new ReducerRecord(), action) => {
       return articlesState.set('loading', true)
 
     case LOAD_ALL_ARTICLES + SUCCESS:
+      response[0].comments = []
       return articlesState
         .set('entities', arrToMap(response, ArticleRecord))
         .set('loading', false)
@@ -51,6 +52,7 @@ export default (articlesState = new ReducerRecord(), action) => {
       return articlesState.setIn(['entities', payload.id, 'loading'], true)
 
     case LOAD_ARTICLE + SUCCESS:
+      response.comments = []
       return articlesState.setIn(
         ['entities', payload.id],
         new ArticleRecord(response)
