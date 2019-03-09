@@ -4,6 +4,7 @@ import ArticlesPage from './components/routes/articles'
 import UserForm from './components/user-form'
 import Filters from './components/filters'
 import Counter from './components/counter'
+import Pagination from './components/comment-pagination/comment-pagination'
 
 class App extends Component {
   render() {
@@ -26,6 +27,11 @@ class App extends Component {
               articles
             </NavLink>
           </div>
+          <div>
+            <NavLink to="/pages/1" activeStyle={{ color: 'red' }}>
+              Pagination
+            </NavLink>
+          </div>
         </div>
         <Switch>
           <Route path="/counter" component={Counter} exact />
@@ -35,6 +41,7 @@ class App extends Component {
             render={() => <h1>New Article Page</h1>}
           />
           <Route path="/articles" component={ArticlesPage} />
+          <Route path="/pages/:id" component={Pagination} />
           <Route path="*" render={() => <h1>Not Found Page</h1>} />
         </Switch>
       </div>

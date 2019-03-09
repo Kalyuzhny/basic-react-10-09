@@ -3,6 +3,8 @@ import { createSelector } from 'reselect'
 export const articlesMapSelector = (state) => state.articles.entities
 export const articlesLoadingSelector = (state) => state.articles.loading
 export const commentsSelector = (state) => state.comments.entities
+export const commentPagesSelector = (state) => state.comments.onpage
+export const totalCommentsSelector = (state) => state.comments.totalComments
 export const dateRangeSelector = (state) => state.filters.dateRange
 export const selectedSelector = (state) => state.filters.selected
 
@@ -43,3 +45,8 @@ export const createCommentSelector = () =>
     console.log('---', 'comment selector', id)
     return comments.get(id)
   })
+
+export const commentsOnPageSelector = createSelector(
+  commentPagesSelector,
+  (comments) => comments.valueSeq().toArray()
+)
