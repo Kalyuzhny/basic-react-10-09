@@ -1,16 +1,15 @@
-import { ADD_COMMENT, LOAD_COMMENTS, SUCCESS } from '../constants'
+import { ADD_COMMENT, LOAD_COMMENTS, SUCCESS, START } from '../constants'
 import { arrToMap } from './utils'
 import { Record } from 'immutable'
 
 const CommentRecord = Record({
   id: null,
   text: null,
-  user: null,
-  loading: false
+  user: null
 })
 
 const ReducerRecord = Record({
-  comments: arrToMap([], CommentRecord),
+  entities: arrToMap([], CommentRecord),
   loading: false,
   loaded: false,
   error: null
@@ -25,10 +24,16 @@ export default (state = new ReducerRecord(), action) => {
         ...payload.comment,
         id: randomId
       })
+
+    case LOAD_COMMENTS + START:
+      return state.set('loading', true)
+
     case LOAD_COMMENTS + SUCCESS:
       console.info('-----' + LOAD_COMMENTS + SUCCESS + response)
-      return arrToMap(response, CommentRecord)
-
+      return state
+        .set('entities', arrToMap(response, CommentRecord))
+        .set('loaded', true)
+        .set('loading', false)
     default:
       return state
   }

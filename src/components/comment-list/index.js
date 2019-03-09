@@ -7,7 +7,11 @@ import toggleOpen from '../../decorators/toggleOpen'
 import './style.css'
 import { loadComments } from '../../ac'
 import { connect } from 'react-redux'
-import { articleCommentsSelector } from '../../selectors/index'
+import {
+  commentListSelector,
+  commentsLoadingSelector
+} from '../../selectors/index'
+import Loader from '../common/loader'
 
 class CommentList extends Component {
   static propTypes = {
@@ -41,10 +45,14 @@ class CommentList extends Component {
     const {
       article: { id },
       isOpen,
-      comments
+      comments,
+      loading
     } = this.props
-    console.info('--- Comments from list: ' + comments)
+
     if (!isOpen) return null
+
+    console.info('---Loading  ' + loading)
+    if (loading) return <Loader />
 
     return (
       <div className="test__comment-list--body">
@@ -58,15 +66,19 @@ class CommentList extends Component {
     )
   }
 
-  componentDidMount() {
-    const { fetchData } = this.props
-    fetchData && fetchData(this.props.article.id)
+  componentDidUpdate(oldProps) {
+    const { fetchData, isOpen } = this.props
+    console.info('---- START FETCH')
+    if (!oldProps.isOpen && isOpen)
+      fetchData && fetchData(this.props.article.id)
   }
 
   get comments() {
+    const { comments } = this.props
+
     return (
       <ul>
-        {this.props.comments.map((id) => (
+        {comments.map((id) => (
           <li key={id} className="test__comment-list--item">
             <Comment id={id} />
           </li>
@@ -78,9 +90,9 @@ class CommentList extends Component {
 
 export default connect(
   (state) => {
-    console.log('---', 'comment list connect' + articleCommentsSelector(state))
     return {
-      comments: articleCommentsSelector(state)
+      comments: commentListSelector(state),
+      loading: commentsLoadingSelector(state)
     }
   },
   { fetchData: loadComments }

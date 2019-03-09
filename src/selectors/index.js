@@ -2,23 +2,20 @@ import { createSelector } from 'reselect'
 
 export const articlesMapSelector = (state) => state.articles.entities
 export const articlesLoadingSelector = (state) => state.articles.loading
-export const commentsSelector = (state) => state.comments
+export const commentsLoadingSelector = (state) => state.comments.loading
+export const commentsMapSelector = (state) => state.comments.entities
 export const dateRangeSelector = (state) => state.filters.dateRange
 export const selectedSelector = (state) => state.filters.selected
 
-export const idSelector = (_, props) => props.id
+export const idSelector = (_, props) => props.id.id
 export const articlesListSelector = createSelector(
   articlesMapSelector,
   (articlesMap) => articlesMap.valueSeq().toArray()
 )
 
-export const articleCommentsSelector = createSelector(
-  commentsSelector,
-  (commentsMap) =>
-    commentsMap
-      .valueSeq()
-      .toArray()
-      .map((value) => value.id)
+export const commentListSelector = createSelector(
+  commentsMapSelector,
+  (commentsMap) => commentsMap.valueSeq().toArray()
 )
 
 export const filtratedArticles = createSelector(
@@ -30,7 +27,7 @@ export const filtratedArticles = createSelector(
 
     console.log('---', 'article list selector')
 
-    return articles.filter((article) => {
+    const fileredArticles = articles.filter((article) => {
       const published = Date.parse(article.date)
       return (
         (!selected.length ||
@@ -38,11 +35,12 @@ export const filtratedArticles = createSelector(
         (!from || !to || (published > from && published < to))
       )
     })
+    console.log('----Filtrated articles: ' + fileredArticles)
+    return fileredArticles
   }
 )
 
 export const createCommentSelector = () =>
-  createSelector(commentsSelector, idSelector, (comments, id) => {
-    console.log('---', 'comment selector', id)
-    return comments.get(id)
+  createSelector(commentListSelector, idSelector, (comments, id) => {
+    return comments.filter((comment) => comment.id === id)[0]
   })
