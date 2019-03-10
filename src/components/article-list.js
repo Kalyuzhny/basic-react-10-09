@@ -26,7 +26,11 @@ export class ArticleList extends Component {
     const { articles } = this.props
     return articles.map((article) => (
       <li key={article.id} className="test__article-list--item">
-        <NavLink to={`/articles/${article.id}`} activeStyle={{ color: 'red' }}>
+        <NavLink
+          to={`/articles/${article.id}`}
+          key={'nav' + article.id}
+          activeStyle={{ color: 'red' }}
+        >
           {article.title}
         </NavLink>
       </li>
